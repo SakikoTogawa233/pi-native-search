@@ -1,6 +1,6 @@
-# @sakikotogawa/pi-native-search
+# @sakiko233/pi-native-search
 
-[![npm version](https://img.shields.io/npm/v/@sakikotogawa/pi-native-search)](https://www.npmjs.com/package/@sakikotogawa/pi-native-search)
+[![npm version](https://img.shields.io/npm/v/@sakiko233/pi-native-search)](https://www.npmjs.com/package/@sakiko233/pi-native-search)
 [![license](https://img.shields.io/npm/l/pi-native-search)](LICENSE)
 
 A minimal [Pi](https://github.com/badlogic/pi-mono) extension that enables provider-native web search for OpenAI Codex, Kimi For Coding, and DeepSeek.
@@ -18,19 +18,21 @@ All other providers are intentionally unsupported.
 ## Install
 
 ```bash
-pi install npm:@sakikotogawa/pi-native-search
+pi install npm:@sakiko233/pi-native-search
 ```
 
 ## Usage
 
-For OpenAI Codex, the extension does not register a client-side search tool. It rewrites the outgoing request to:
+For OpenAI Codex, the extension does not register a client-side search tool. It appends a server-side `{ "type": "web_search" }` entry to the outgoing request's existing tools list and sets `tool_choice` to `auto`:
 
 ```json
 {
-  "tools": [{ "type": "web_search" }],
+  "tools": [...existingTools, { "type": "web_search" }],
   "tool_choice": "auto"
 }
 ```
+
+Codex keeps full access to its local tools (read, bash, edit, write) while gaining web search. The server-side `web_search` tool produces no client tool card.
 
 For Kimi For Coding and DeepSeek, the extension registers a `web_search` tool. When the main model calls it, the extension sends a nested Anthropic Messages request declaring:
 
