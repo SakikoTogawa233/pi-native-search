@@ -1,6 +1,6 @@
 {
   "name": "@sakiko233/pi-native-search",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "private": false,
   "description": "Minimal Pi extension for provider-native web search on OpenAI Codex, Kimi For Coding, and DeepSeek.",
   "keywords": [

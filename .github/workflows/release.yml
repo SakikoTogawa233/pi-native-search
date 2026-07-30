@@ -10,6 +10,7 @@ on:
 
 permissions:
   contents: write
+  id-token: write   # required for npm trusted publisher (OIDC)
 
 concurrency:
   group: release-${{ github.ref }}
@@ -52,11 +53,9 @@ jobs:
           npm install --no-save --ignore-scripts typescript
           npm run typecheck
 
-      - name: Publish to npm
+      - name: Publish to npm (trusted publisher / OIDC provenance)
         if: steps.check.outputs.publish == 'true'
-        run: npm publish --access public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npm publish --provenance --access public
 
       - name: Create GitHub release
         if: steps.check.outputs.publish == 'true'
