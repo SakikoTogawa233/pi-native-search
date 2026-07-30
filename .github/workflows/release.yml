@@ -27,7 +27,9 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          registry-url: 'https://registry.npmjs.org'
+          # No registry-url / NODE_AUTH_TOKEN: publishing is tokenless via the
+          # npm trusted publisher (OIDC). Setting registry-url would write an
+          # empty _authToken to .npmrc and shadow the OIDC publish credential.
 
       - name: Read package metadata
         id: meta
