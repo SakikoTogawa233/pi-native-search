@@ -1,123 +1,22 @@
-# Provider capabilities registry
-# Each entry lists which native tools the provider supports.
-# When a provider has native support, the extension delegates to it.
-# When not, the extension uses a generic HTTP-based implementation.
+# Supported provider registry for pi-native-search.
+# The extension intentionally supports only providers whose server-side web
+# search behavior is implemented.
 
 providers:
-  # --- Providers with native web search ---
-  google:
-    name: "Google Gemini"
-    native_search: true
-    native_fetch: false
-    # Uses google_search grounding tool via Gemini API
-    search_type: "google_search_grounding"
+  openai-codex:
+    name: "OpenAI Codex"
+    mode: "request_injection"
+    # Injects { type: "web_search" } into the main Responses request.
+    search_type: "openai_responses_web_search"
 
-  openai:
-    name: "OpenAI"
-    native_search: true
-    native_fetch: false
-    # Uses web_search tool via OpenAI Responses API
-    search_type: "openai_web_search"
-
-  openrouter:
-    name: "OpenRouter"
-    native_search: true
-    native_fetch: false
-    # Can route to perplexity/sonar models
-    search_type: "openrouter_sonar"
-
-  perplexity:
-    name: "Perplexity"
-    native_search: true
-    native_fetch: true
-    # Sonar API - all responses are web-grounded
-    search_type: "perplexity_sonar"
-
-  xai:
-    name: "xAI (Grok)"
-    native_search: true
-    native_fetch: false
-    # Grok has built-in web search
-    search_type: "xai_search"
-
-  zai:
-    name: "ZAI"
-    native_search: true
-    native_fetch: true
-    search_type: "zai_search"
-
-  # --- Providers that need HTTP-based fallback ---
-  anthropic:
-    name: "Anthropic"
-    native_search: false
-    native_fetch: false
+  kimi-coding:
+    name: "Kimi For Coding"
+    mode: "anthropic_server_tool"
+    # Uses https://api.kimi.com/coding with web_search_20250305.
+    search_type: "web_search_20250305"
 
   deepseek:
     name: "DeepSeek"
-    native_search: false
-    native_fetch: false
-
-  mistral:
-    name: "Mistral"
-    native_search: false
-    native_fetch: false
-
-  groq:
-    name: "Groq"
-    native_search: false
-    native_fetch: false
-
-  cerebras:
-    name: "Cerebras"
-    native_search: false
-    native_fetch: false
-
-  huggingface:
-    name: "Hugging Face"
-    native_search: false
-    native_fetch: false
-
-  fireworks:
-    name: "Fireworks"
-    native_search: false
-    native_fetch: false
-
-  cloudflare:
-    name: "Cloudflare"
-    native_search: false
-    native_fetch: false
-
-  amazon-bedrock:
-    name: "Amazon Bedrock"
-    native_search: false
-    native_fetch: false
-
-  azure-openai:
-    name: "Azure OpenAI"
-    native_search: false
-    native_fetch: false
-
-  kimi:
-    name: "Kimi"
-    native_search: false
-    native_fetch: false
-
-  minimax:
-    name: "MiniMax"
-    native_search: false
-    native_fetch: false
-
-  github-copilot:
-    name: "GitHub Copilot"
-    native_search: false
-    native_fetch: false
-
-  vercel:
-    name: "Vercel AI Gateway"
-    native_search: false
-    native_fetch: false
-
-  opencode:
-    name: "OpenCode"
-    native_search: false
-    native_fetch: false
+    mode: "anthropic_server_tool"
+    # Uses https://api.deepseek.com/anthropic with web_search_20250305.
+    search_type: "web_search_20250305"

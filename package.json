@@ -1,28 +1,29 @@
 {
   "name": "pi-native-search",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": false,
-  "description": "Pi extension that adds web_search and web_fetch tools using each provider's native search backend (ZAI MCP, Anthropic, Google, OpenAI, xAI, Claude Code subscription via claude-bridge), with DuckDuckGo as a universal fallback.",
+  "description": "Minimal Pi extension for provider-native web search on OpenAI Codex, Kimi For Coding, and DeepSeek.",
   "keywords": [
     "pi-package",
     "pi",
     "extension",
     "web-search",
-    "web-fetch",
-    "claude",
-    "claude-code",
-    "glm",
-    "duckduckgo"
+    "openai-codex",
+    "kimi",
+    "deepseek"
   ],
   "author": "Salem Malibary <salem.thecreativeconsult@gmail.com>",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/smalibary/pi-native-search.git"
+    "url": "git+https://github.com/SakikoTogawa233/pi-native-search.git"
   },
-  "homepage": "https://github.com/smalibary/pi-native-search#readme",
+  "homepage": "https://github.com/SakikoTogawa233/pi-native-search#readme",
   "bugs": {
-    "url": "https://github.com/smalibary/pi-native-search/issues"
+    "url": "https://github.com/SakikoTogawa233/pi-native-search/issues"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit -p tsconfig.json"
   },
   "engines": {
     "node": ">=20"
@@ -37,11 +38,6 @@
     "@mariozechner/pi-coding-agent": "*",
     "@mariozechner/pi-tui": "*",
     "@sinclair/typebox": "*"
-  },
-  "peerDependenciesMeta": {
-    "pi-claude-bridge": {
-      "optional": true
-    }
   },
   "pi": {
     "extensions": [
