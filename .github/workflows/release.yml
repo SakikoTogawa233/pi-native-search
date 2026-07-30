@@ -1,0 +1,68 @@
+name: Release
+
+# Publishes to npm and creates a versioned GitHub release whenever a new
+# version lands on main. Re-runs on non-version commits are a safe no-op:
+# if package.json's version already exists on npm, every step is skipped.
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Read package metadata
+        id: meta
+        run: |
+          node -e "const p=require('./package.json');process.stdout.write('version='+p.version+'\n'+'name='+p.name+'\n')" >> "$GITHUB_OUTPUT"
+
+      - name: Detect unpublished version
+        id: check
+        run: |
+          CURRENT="${{ steps.meta.outputs.version }}"
+          NAME="${{ steps.meta.outputs.name }}"
+          PUBLISHED=$(npm view "${NAME}" version 2>/dev/null || true)
+          echo "current=${CURRENT} published=${PUBLISHED}"
+          if [ "${PUBLISHED}" = "${CURRENT}" ]; then
+            echo "publish=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "publish=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Typecheck
+        if: steps.check.outputs.publish == 'true'
+        run: |
+          npm install --no-save --ignore-scripts typescript
+          npm run typecheck
+
+      - name: Publish to npm
+        if: steps.check.outputs.publish == 'true'
+        run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Create GitHub release
+        if: steps.check.outputs.publish == 'true'
+        run: |
+          gh release create "v${{ steps.meta.outputs.version }}" \
+            --title "v${{ steps.meta.outputs.version }}" \
+            --generate-notes
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
