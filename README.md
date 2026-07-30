@@ -58,6 +58,16 @@ The provider performs the search server-side and returns text plus search-result
 
 Configuration persists in `~/.pi/agent/search-config.json`.
 
+## Roadmap
+
+- **Selectable search protocol via `/search`**
+
+  Today the search protocol is hardwired per provider. The plan is to decouple provider from protocol so users can choose which protocol each provider uses directly from the `/search` settings UI — e.g. Kimi For Coding and DeepSeek offer the Anthropic server-tool protocol (`web_search_20250305`), while OpenAI Codex offers the OpenAI request-injection protocol (`{ "type": "web_search" }`). This is especially useful for providers that expose multiple compatible endpoints (for example DeepSeek's OpenAI- and Anthropic-compatible APIs).
+
+- **Third-party search tools via MCP**
+
+  Add an option to route search through a third-party search tool exposed via MCP (Model Context Protocol) instead of relying on the active provider's native server-side search, letting users plug in external search backends.
+
 ## Development
 
 ```bash
