@@ -307,9 +307,11 @@ export default function searchExtension(pi: ExtensionAPI): void {
     if (!isRequestInjectionProvider(provider)) return;
     if (!isSearchEnabledFor(provider, searchExtensionConfig)) return;
 
+    const payload = event.payload as Record<string, unknown>;
+    const existingTools = Array.isArray(payload.tools) ? payload.tools : [];
     return {
-      ...(event.payload as Record<string, unknown>),
-      tools: [{ type: "web_search" }],
+      ...payload,
+      tools: [...existingTools, { type: "web_search" }],
       tool_choice: "auto",
     };
   });
