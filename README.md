@@ -1,6 +1,6 @@
-# pi-native-search
+# @sakikotogawa/pi-native-search
 
-[![npm version](https://img.shields.io/npm/v/pi-native-search)](https://www.npmjs.com/package/pi-native-search)
+[![npm version](https://img.shields.io/npm/v/@sakikotogawa/pi-native-search)](https://www.npmjs.com/package/@sakikotogawa/pi-native-search)
 [![license](https://img.shields.io/npm/l/pi-native-search)](LICENSE)
 
 A minimal [Pi](https://github.com/badlogic/pi-mono) extension that enables provider-native web search for OpenAI Codex, Kimi For Coding, and DeepSeek.
@@ -18,7 +18,7 @@ All other providers are intentionally unsupported.
 ## Install
 
 ```bash
-pi install npm:pi-native-search
+pi install npm:@sakikotogawa/pi-native-search
 ```
 
 ## Usage
