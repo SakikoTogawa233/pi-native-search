@@ -1,19 +1,21 @@
 name: Release
 
 # Publishes to npm and creates a versioned GitHub release whenever a new
-# version lands on main. Re-runs on non-version commits are a safe no-op:
-# if package.json's version already exists on npm, every step is skipped.
+# version lands on main. Publishing is tokenless via the npm trusted
+# publisher (OIDC): no NPM_TOKEN secret is required. The runner's default
+# npm does not support trusted publishing, so it is pinned to ^11.5.1.
 
 on:
   push:
     branches: [main]
+  workflow_dispatch:
 
 permissions:
   contents: write
-  id-token: write   # required for npm trusted publisher (OIDC)
+  id-token: write   # required for npm trusted publisher (OIDC provenance)
 
 concurrency:
-  group: release-${{ github.ref }}
+  group: release-publish
   cancel-in-progress: false
 
 jobs:
@@ -21,15 +23,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
-          node-version: '20'
-          # No registry-url / NODE_AUTH_TOKEN: publishing is tokenless via the
-          # npm trusted publisher (OIDC). Setting registry-url would write an
-          # empty _authToken to .npmrc and shadow the OIDC publish credential.
+          node-version: '24'
+          registry-url: 'https://registry.npmjs.org'
+          package-manager-cache: false
+
+      - name: Ensure npm supports trusted publishing
+        run: npm install -g "npm@^11.5.1"
 
       - name: Read package metadata
         id: meta
@@ -55,7 +59,7 @@ jobs:
           npm install --no-save --ignore-scripts typescript
           npm run typecheck
 
-      - name: Publish to npm (trusted publisher / OIDC provenance)
+      - name: Publish to npm (trusted publisher / OIDC)
         if: steps.check.outputs.publish == 'true'
         run: npm publish --provenance --access public
 
