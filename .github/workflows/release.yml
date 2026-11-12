@@ -53,11 +53,12 @@ jobs:
             echo "publish=true" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Typecheck
+      - name: Typecheck and regression tests
         if: steps.check.outputs.publish == 'true'
         run: |
-          npm install --no-save --ignore-scripts typescript
+          npm install --ignore-scripts
           npm run typecheck
+          npm test
 
       - name: Publish to npm (trusted publisher / OIDC)
         if: steps.check.outputs.publish == 'true'

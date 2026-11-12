@@ -20,3 +20,11 @@ providers:
     mode: "anthropic_server_tool"
     # Uses https://api.deepseek.com/anthropic with web_search_20250305.
     search_type: "web_search_20250305"
+
+  zai-coding-cn:
+    name: "GLM Coding (Z.ai)"
+    mode: "anthropic_server_tool"
+    # Uses https://open.bigmodel.cn/api/anthropic with web_search_20250305.
+    # The provider's OpenAI-style baseUrl (open.bigmodel.cn/api/coding/paas/v4)
+    # does not serve /v1/messages, so the Anthropic endpoint is hardcoded.
+    search_type: "web_search_20250305"

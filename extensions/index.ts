@@ -4,8 +4,9 @@
  * Supported providers:
  * - OpenAI Codex: injects `{ type: "web_search" }` into the main request
  *   instead of registering a client-side search tool.
- * - Kimi For Coding and DeepSeek: use a Claude Code-style nested Anthropic
- *   Messages request declaring the server-side `web_search_20250305` tool.
+ * - Kimi For Coding, DeepSeek, and GLM Coding (Z.ai): use a Claude Code-style
+ *   nested Anthropic Messages request declaring the server-side
+ *   `web_search_20250305` tool.
  *
  * Config persists in ~/.pi/agent/search-config.json.
  */
@@ -73,9 +74,14 @@ const PROVIDERS: Record<string, ProviderDefinition> = {
     name: "DeepSeek",
     envKey: "DEEPSEEK_API_KEY",
   },
+  "zai-coding-cn": {
+    name: "GLM Coding (Z.ai)",
+    envKey: "ZAI_API_KEY",
+  },
 };
 
 const DEEPSEEK_ANTHROPIC_BASE_URL = "https://api.deepseek.com/anthropic";
+const ZAI_ANTHROPIC_BASE_URL = "https://open.bigmodel.cn/api/anthropic";
 const DEFAULT_ANTHROPIC_BASE_URL = "https://api.anthropic.com";
 
 function getConfigPath(): string {
@@ -149,6 +155,7 @@ function getNativeSearchBaseUrl(
   authBaseUrl?: string,
 ): string {
   if (provider === "deepseek") return DEEPSEEK_ANTHROPIC_BASE_URL;
+  if (provider === "zai-coding-cn") return ZAI_ANTHROPIC_BASE_URL;
   return authBaseUrl || modelBaseUrl || DEFAULT_ANTHROPIC_BASE_URL;
 }
 

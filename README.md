@@ -3,7 +3,7 @@
 [![npm version](https://img.shields.io/npm/v/@sakiko233/pi-native-search)](https://www.npmjs.com/package/@sakiko233/pi-native-search)
 [![license](https://img.shields.io/npm/l/pi-native-search)](LICENSE)
 
-A minimal [Pi](https://github.com/badlogic/pi-mono) extension that enables provider-native web search for OpenAI Codex, Kimi For Coding, and DeepSeek.
+A minimal [Pi](https://github.com/badlogic/pi-mono) extension that enables provider-native web search for OpenAI Codex, Kimi For Coding, DeepSeek, and GLM Coding (Z.ai).
 
 ## Supported providers
 
@@ -12,6 +12,9 @@ A minimal [Pi](https://github.com/badlogic/pi-mono) extension that enables provi
 | **OpenAI Codex** | Main-request injection of `{ "type": "web_search" }` | Pi's `openai-codex` OAuth resolver |
 | **Kimi For Coding** | Claude Code-style nested Anthropic Messages request declaring `web_search_20250305` | `KIMI_API_KEY` or Kimi OAuth |
 | **DeepSeek** | Claude Code-style nested Anthropic Messages request declaring `web_search_20250305` against `https://api.deepseek.com/anthropic` | `DEEPSEEK_API_KEY` |
+| **GLM Coding (Z.ai)** | Claude Code-style nested Anthropic Messages request declaring `web_search_20250305` against `https://open.bigmodel.cn/api/anthropic` | `ZAI_API_KEY` or `zai-coding-cn` key in `auth.json` |
+
+GLM support currently targets the China Coding Plan provider `zai-coding-cn` (live-tested with `glm-5.3`), not the global Z.ai provider. Search requests use the Anthropic endpoint rather than the model's OpenAI-compatible Coding endpoint.
 
 All other providers are intentionally unsupported.
 
@@ -34,7 +37,7 @@ For OpenAI Codex, the extension does not register a client-side search tool. It 
 
 Codex keeps full access to its local tools (read, bash, edit, write) while gaining web search. The server-side `web_search` tool produces no client tool card.
 
-For Kimi For Coding and DeepSeek, the extension registers a `web_search` tool. When the main model calls it, the extension sends a nested Anthropic Messages request declaring:
+For Kimi For Coding, DeepSeek, and GLM Coding (Z.ai), the extension registers a `web_search` tool. When the main model calls it, the extension sends a nested Anthropic Messages request declaring:
 
 ```json
 {
@@ -58,11 +61,22 @@ The provider performs the search server-side and returns text plus search-result
 
 Configuration persists in `~/.pi/agent/search-config.json`.
 
+## Roadmap
+
+- **Selectable search protocol via `/search`**
+
+  Today the search protocol is hardwired per provider. The plan is to decouple provider from protocol so users can choose which protocol each provider uses directly from the `/search` settings UI — e.g. Kimi For Coding and DeepSeek offer the Anthropic server-tool protocol (`web_search_20250305`), while OpenAI Codex offers the OpenAI request-injection protocol (`{ "type": "web_search" }`). This is especially useful for providers that expose multiple compatible endpoints (for example DeepSeek's OpenAI- and Anthropic-compatible APIs).
+
+- **Third-party search tools via MCP**
+
+  Add an option to route search through a third-party search tool exposed via MCP (Model Context Protocol) instead of relying on the active provider's native server-side search, letting users plug in external search backends.
+
 ## Development
 
 ```bash
-npm install --no-save --ignore-scripts typescript
+npm install --ignore-scripts
 npm run typecheck
+npm test
 ```
 
 The extension is a single TypeScript file, `extensions/index.ts`, loaded directly by Pi.
